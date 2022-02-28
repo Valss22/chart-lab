@@ -1,13 +1,11 @@
-// Получаем canvas элемент
 let canvas = document.getElementById('canvas')
-
 let button = document.getElementById('button')
 
-// Указываем элемент для 2D рисования
 let ctx = canvas.getContext('2d')
 
 const xStart = 330
 const yStart = 20
+const scale = 50
 
 ctx.fillStyle = "black"
 ctx.lineWidth = 2.0
@@ -20,64 +18,40 @@ ctx.lineTo(xStart, 250)
 ctx.lineTo(xStart, 500 - yStart)
 ctx.stroke()
 
-const coordinatesOfZero = {
+const cordsZero = {
   x: xStart,
   y: yStart + 230
 }
 
-
 button.addEventListener('click', () => {
   let xCoef = document.getElementById('inputX').value
-  //let inputSign = document.getElementById('inputSign').value
   let yCoef = document.getElementById('inputY').value
-  //let inputSignIneq = document.getElementById('inputSignIneq').value
   let c = document.getElementById('inputC').value
-  //let c = inputC.parseInt()
-  //let xCoef = inputX.parseInt()
-  //let yCoef = inputY.parseInt()
 
   const fy = (x) => {
-    return coordinatesOfZero['y'] - (50 * (c - xCoef * x) / yCoef)
+    return cordsZero['y'] - (scale * (c - xCoef * x) / yCoef)
   }
 
   const fx = (y) => {
-    return coordinatesOfZero['x'] + (50 * ((c - yCoef * y) / xCoef))
+    return cordsZero['x'] + (scale * ((c - yCoef * y) / xCoef))
   }
-
   ctx.beginPath()
-  ctx.moveTo(coordinatesOfZero['x'], coordinatesOfZero['y'])
-  ctx.lineTo(fx(0,), coordinatesOfZero['y'])
-  ctx.lineTo(coordinatesOfZero['x'], fy(0))
+  ctx.moveTo(cordsZero['x'], cordsZero['y'])
+  ctx.lineTo(fx(0,), cordsZero['y'])
+  ctx.lineTo(cordsZero['x'], fy(0))
   ctx.stroke()
 })
 
+const markUpAxis = (boolX, signAxis, lenAxis) => {
+  for (let i = 1; i <= lenAxis; i++) {
+    ctx.fillText(
+      (signAxis * i).toString(), cordsZero['x'] + signAxis * i * scale * boolX,
+      cordsZero['y'] + signAxis * i * scale * !boolX
+    )
+  }
+}
 
-
-// y+
-for (let i = 1; i <= 3; i++) {
-  ctx.fillText(
-    i.toString(), coordinatesOfZero['x'],
-    coordinatesOfZero['y'] - i * 50
-  )
-}
-// y-
-for (let i = 1; i <= 3; i++) {
-  ctx.fillText(
-    (-1 * i).toString(), coordinatesOfZero['x'],
-    coordinatesOfZero['y'] + i * 50
-  )
-}
-//x+
-for (let i = 1; i <= 3; i++) {
-  ctx.fillText(
-    i.toString(), coordinatesOfZero['x'] + 50 * i,
-    coordinatesOfZero['y']
-  )
-}
-//x-
-for (let i = 1; i <= 3; i++) {
-  ctx.fillText(
-    (-1 * i).toString(), coordinatesOfZero['x'] - 50 * i,
-    coordinatesOfZero['y']
-  )
-}
+markUpAxis(0,  1, 4)
+markUpAxis(0,  -1, 4)
+markUpAxis(1, 1, 4)
+markUpAxis(1,  -1, 4)
